@@ -4,6 +4,8 @@ A minimal **client-side** Fabric mod for **Minecraft 1.21.1** that prevents armo
 frames from being frustum-culled when they are within a configurable range.  No commands, no tags —
 just open Mod Menu, tweak the slider, and your furniture stays visible.
 
+![Preview](assets/ON_AND_OFF.gif)
+
 ---
 
 ## The Problem
