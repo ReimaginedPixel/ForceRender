@@ -68,6 +68,14 @@ public class ForceRenderConfigScreen extends Screen {
     }
 
     @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+        // ModMenu already applies the blur shader for the parent screen; calling it
+        // again on the same frame throws "Can only blur once per frame". Use the
+        // plain darkening overlay instead.
+        this.renderDarkening(context);
+    }
+
+    @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         renderBackground(context, mouseX, mouseY, delta);
 
