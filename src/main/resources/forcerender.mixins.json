@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.reimaginedpixel.forcerender.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ForceRenderMixin"
+  ],
+  "mixins": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "forcerender",
+  "version": "${version}",
+
+  "name": "ForceRender",
+  "description": "Prevents armor stands and item frames from being frustum-culled when they are within a configurable range, fixing large custom models that disappear at screen edges.",
+  "authors": [
+    "reimaginedpixel"
+  ],
+  "contact": {
+    "sources": "https://github.com/reimaginedpixel/ForceRender",
+    "issues":  "https://github.com/reimaginedpixel/ForceRender/issues"
+  },
+
+  "license": "MIT",
+  "icon": "icon.png",
+
+  "environment": "client",
+
+  "entrypoints": {
+    "client": [
+      "net.reimaginedpixel.forcerender.ForceRenderMod"
+    ],
+    "modmenu": [
+      "net.reimaginedpixel.forcerender.ModMenuIntegration"
+    ]
+  },
+
+  "mixins": [
+    "forcerender.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": "~1.21.1",
+    "java": ">=21"
+  },
+  "suggests": {
+    "modmenu": ">=11.0.0"
+  }
+}
