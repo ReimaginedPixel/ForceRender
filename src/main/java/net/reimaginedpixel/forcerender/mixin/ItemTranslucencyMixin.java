@@ -22,11 +22,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  *
  * <p>The {@code getItemEntityTranslucentCull} render layer is the one Minecraft
  * uses to draw items in the world.  Swapping it for the equivalent
- * {@code getEntityCutout} layer moves those items into the cutout pass, which is
- * alpha-tested and writes depth like an opaque surface.  Depth then resolves the
- * item against translucent blocks correctly.  The trade-off is the usual one for
- * cutout: no soft alpha fade (a pixel is either fully drawn or discarded), which
- * is imperceptible for the overwhelming majority of item textures.
+ * {@code getEntityCutoutNoCull} layer moves those items into the cutout pass,
+ * which is alpha-tested and writes depth like an opaque surface.  Depth then
+ * resolves the item against translucent blocks correctly.  The trade-off is the
+ * usual one for cutout: no soft alpha fade (a pixel is either fully drawn or
+ * discarded), which is imperceptible for the overwhelming majority of item
+ * textures.
  */
 @Environment(EnvType.CLIENT)
 @Mixin(RenderLayer.class)
@@ -38,7 +39,7 @@ public class ItemTranslucencyMixin {
             CallbackInfoReturnable<RenderLayer> callbackInfo) {
 
         if (ForceRenderConfig.enabled && ForceRenderConfig.fixTranslucency) {
-            callbackInfo.setReturnValue(RenderLayer.getEntityCutout(texture));
+            callbackInfo.setReturnValue(RenderLayer.getEntityCutoutNoCull(texture));
         }
     }
 }

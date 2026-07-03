@@ -39,9 +39,9 @@ blend order relative to each other.  The result: transparent items **vanish or g
 moment they sit behind or near water or glass.
 
 ForceRender fixes this by mixing into `RenderLayer#getItemEntityTranslucentCull` — the layer used to
-draw items in the world — and returning the equivalent **cutout** layer instead.  Cutout is
-alpha-tested and writes depth like an opaque surface, so items resolve against translucent blocks
-correctly.  The only trade-off is the usual one for cutout: no soft alpha fade (each pixel is either
+draw items in the world — and returning the equivalent **cutout** layer (`getEntityCutoutNoCull`)
+instead.  Cutout is alpha-tested and writes depth like an opaque surface, so items resolve against
+translucent blocks correctly.  The only trade-off is the usual one for cutout: no soft alpha fade (each pixel is either
 fully drawn or discarded), which is imperceptible for the vast majority of item textures.  Toggle it
 off if you specifically need soft transparency.
 
