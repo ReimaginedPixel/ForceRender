@@ -4,7 +4,8 @@
   "package": "net.reimaginedpixel.forcerender.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "ForceRenderMixin"
+    "ForceRenderMixin",
+    "ItemTranslucencyMixin"
   ],
   "mixins": [],
   "injectors": {

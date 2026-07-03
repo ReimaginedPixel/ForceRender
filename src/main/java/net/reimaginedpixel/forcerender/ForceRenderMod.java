@@ -14,7 +14,7 @@ public class ForceRenderMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ForceRenderConfig.load();
-        LOGGER.info("[ForceRender] Loaded — enabled={}, range={}",
-                ForceRenderConfig.enabled, ForceRenderConfig.renderRange);
+        LOGGER.info("[ForceRender] Loaded — enabled={}, range={}, fixTranslucency={}",
+                ForceRenderConfig.enabled, ForceRenderConfig.renderRange, ForceRenderConfig.fixTranslucency);
     }
 }

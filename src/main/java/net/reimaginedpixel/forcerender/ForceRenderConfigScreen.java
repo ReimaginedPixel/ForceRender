@@ -23,14 +23,17 @@ public class ForceRenderConfigScreen extends Screen {
     // Working copies — only committed to config when Done is pressed
     private boolean pendingEnabled;
     private int     pendingRange;
+    private boolean pendingFixTranslucency;
 
     private ButtonWidget toggleButton;
+    private ButtonWidget translucencyButton;
 
     public ForceRenderConfigScreen(Screen parent) {
         super(Text.literal("ForceRender Settings"));
-        this.parent         = parent;
-        this.pendingEnabled = ForceRenderConfig.enabled;
-        this.pendingRange   = ForceRenderConfig.renderRange;
+        this.parent                 = parent;
+        this.pendingEnabled         = ForceRenderConfig.enabled;
+        this.pendingRange           = ForceRenderConfig.renderRange;
+        this.pendingFixTranslucency = ForceRenderConfig.fixTranslucency;
     }
 
     @Override
@@ -53,6 +56,15 @@ public class ForceRenderConfigScreen extends Screen {
                 startY + ROW_SPACING,
                 WIDGET_WIDTH,
                 WIDGET_HEIGHT));
+
+        // ── Fix translucency toggle ────────────────────────────────────────
+        translucencyButton = ButtonWidget.builder(buildTranslucencyLabel(), btn -> {
+            pendingFixTranslucency = !pendingFixTranslucency;
+            translucencyButton.setMessage(buildTranslucencyLabel());
+        })
+        .dimensions(centerX - WIDGET_WIDTH / 2, startY + ROW_SPACING * 2, WIDGET_WIDTH, WIDGET_HEIGHT)
+        .build();
+        addDrawableChild(translucencyButton);
 
         // ── Done / Cancel ──────────────────────────────────────────────────
         int bottomY  = height - BOTTOM_MARGIN;
@@ -105,9 +117,15 @@ public class ForceRenderConfigScreen extends Screen {
         return Text.literal("Force Render: " + state);
     }
 
+    private Text buildTranslucencyLabel() {
+        String state = pendingFixTranslucency ? COLOR_ON + "ON" : COLOR_OFF + "OFF";
+        return Text.literal("Fix Item Translucency: " + state);
+    }
+
     private void saveAndClose() {
-        ForceRenderConfig.enabled     = pendingEnabled;
-        ForceRenderConfig.renderRange = pendingRange;
+        ForceRenderConfig.enabled         = pendingEnabled;
+        ForceRenderConfig.renderRange     = pendingRange;
+        ForceRenderConfig.fixTranslucency = pendingFixTranslucency;
         ForceRenderConfig.save();
         client.setScreen(parent);
     }

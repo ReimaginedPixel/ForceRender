@@ -1,8 +1,14 @@
 # ForceRender
 
-A minimal **client-side** Fabric mod for **Minecraft 1.21.1** that prevents armor stands and item
-frames from being frustum-culled when they are within a configurable range.  No commands, no tags —
-just open Mod Menu, tweak the slider, and your furniture stays visible.
+A minimal **client-side** Fabric mod for **Minecraft 1.21.x** that keeps custom display models
+looking right:
+
+- **Force render** — prevents armor stands and item frames from being frustum-culled when they are
+  within a configurable range, so large custom models stop popping out of view at the screen edge.
+- **Fix item translucency** — stops translucent items (held, worn, or framed) from disappearing or
+  being clipped when they sit behind water and glass.
+
+No commands, no tags — just open Mod Menu, flip the toggles, and your furniture stays visible.
 
 ![Preview](assets/ON_AND_OFF.gif)
 
@@ -24,14 +30,30 @@ ForceRender mixes into `EntityRenderer#shouldRender`.  For every armor stand and
 the configured range, it returns `true` immediately — bypassing the frustum check.  Entities
 outside that range fall back to vanilla behaviour, so performance is only affected near the player.
 
+## Translucent Items Behind Water / Glass
+
+Minecraft renders translucent **entities** (armor stands and the items they hold or wear) in a
+separate pass from translucent **blocks** (water, glass).  Render layers are only depth-sorted
+*within* each pass, never across them, so a translucent item and a translucent block have no defined
+blend order relative to each other.  The result: transparent items **vanish or get clipped** the
+moment they sit behind or near water or glass.
+
+ForceRender fixes this by mixing into `RenderLayer#getItemEntityTranslucentCull` — the layer used to
+draw items in the world — and returning the equivalent **cutout** layer instead.  Cutout is
+alpha-tested and writes depth like an opaque surface, so items resolve against translucent blocks
+correctly.  The only trade-off is the usual one for cutout: no soft alpha fade (each pixel is either
+fully drawn or discarded), which is imperceptible for the vast majority of item textures.  Toggle it
+off if you specifically need soft transparency.
+
 ## Settings (Mod Menu)
 
 Open **Mod Menu → ForceRender → (gear icon)** to access the config screen:
 
 | Setting | Description | Default |
 |---|---|---|
-| **Force Render** | Enable or disable the mod entirely | Enabled |
+| **Force Render** | Enable or disable the frustum-culling bypass | Enabled |
 | **Render Range** | Entities beyond this many blocks use vanilla culling | 32 blocks |
+| **Fix Item Translucency** | Draw world items as cutout so they don't vanish behind water/glass | Enabled |
 
 Settings are saved to `.minecraft/config/forcerender.properties` and can also be edited by hand.
 
@@ -81,9 +103,11 @@ on a dedicated server.
 
 ## Compatibility
 
-| Minecraft | Fabric Loader | Fabric API      | Mod Menu       |
-|-----------|---------------|-----------------|----------------|
-| 1.21.1    | ≥ 0.16.0      | 0.102.0+1.21.1  | ≥ 11.0 (opt.)  |
+| Minecraft   | Fabric Loader | Fabric API | Mod Menu      |
+|-------------|---------------|------------|---------------|
+| 1.21.1 – 1.21.11 | ≥ 0.16.0 | `*`        | ≥ 11.0 (opt.) |
+
+> Built against 1.21.11; the JAR also loads on 1.21.1 – 1.21.10.
 
 ## License
 

@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "ForceRender",
-  "description": "Prevents armor stands and item frames from being frustum-culled when they are within a configurable range, fixing large custom models that disappear at screen edges.",
+  "description": "Prevents armor stands and item frames from being frustum-culled when they are within a configurable range, and fixes translucent items that vanish behind water and glass. Keeps large custom models visible and correctly composited.",
   "authors": [
     "reimaginedpixel"
   ],

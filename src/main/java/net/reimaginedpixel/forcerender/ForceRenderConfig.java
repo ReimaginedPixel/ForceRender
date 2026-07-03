@@ -12,8 +12,9 @@ public final class ForceRenderConfig {
     private static final Path CONFIG_FILE =
             FabricLoader.getInstance().getConfigDir().resolve("forcerender.properties");
 
-    public static boolean enabled     = true;
-    public static int     renderRange = 32;   // blocks; 1–256
+    public static boolean enabled         = true;
+    public static int     renderRange     = 32;    // blocks; 1–256
+    public static boolean fixTranslucency = true;  // cutout-swap for translucent items
 
     private ForceRenderConfig() {}
 
@@ -26,6 +27,7 @@ public final class ForceRenderConfig {
         try (var reader = Files.newBufferedReader(CONFIG_FILE)) {
             props.load(reader);
             enabled = Boolean.parseBoolean(props.getProperty("enabled", "true"));
+            fixTranslucency = Boolean.parseBoolean(props.getProperty("fixTranslucency", "true"));
             try {
                 renderRange = clampRange(Integer.parseInt(props.getProperty("renderRange", "32")));
             } catch (NumberFormatException e) {
@@ -38,8 +40,9 @@ public final class ForceRenderConfig {
 
     public static void save() {
         Properties props = new Properties();
-        props.setProperty("enabled",     String.valueOf(enabled));
-        props.setProperty("renderRange", String.valueOf(renderRange));
+        props.setProperty("enabled",         String.valueOf(enabled));
+        props.setProperty("renderRange",     String.valueOf(renderRange));
+        props.setProperty("fixTranslucency", String.valueOf(fixTranslucency));
         try (var writer = Files.newBufferedWriter(CONFIG_FILE)) {
             props.store(writer, "ForceRender — edit here or use the in-game Mod Menu settings screen");
         } catch (IOException e) {
