@@ -3,6 +3,7 @@ package net.reimaginedpixel.forcerender.mixin;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.util.Identifier;
 import net.reimaginedpixel.forcerender.ForceRenderConfig;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,26 +21,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * defined blend order relative to one another, so the item's alpha pixels are
  * composited incorrectly — most visibly they disappear behind water or glass.
  *
- * <p>The {@code getItemEntityTranslucentCull} render layer is the one Minecraft
- * uses to draw items in the world.  Swapping it for the equivalent
- * {@code getEntityCutoutNoCull} layer moves those items into the cutout pass,
- * which is alpha-tested and writes depth like an opaque surface.  Depth then
- * resolves the item against translucent blocks correctly.  The trade-off is the
- * usual one for cutout: no soft alpha fade (a pixel is either fully drawn or
- * discarded), which is imperceptible for the overwhelming majority of item
- * textures.
+ * <p>{@code RenderLayers.itemEntityTranslucentCull} builds the per-texture layer
+ * used to draw custom-textured items in the world.  Swapping it for the matching
+ * {@code entityCutout} layer moves those items into the cutout pass, which is
+ * alpha-tested and writes depth like an opaque surface, so depth resolves the
+ * item against translucent blocks correctly.  The only trade-off is the usual one
+ * for cutout: no soft alpha fade (a pixel is either fully drawn or discarded),
+ * which is imperceptible for the overwhelming majority of item textures.
+ *
+ * @see ItemAtlasTranslucencyMixin for the block-atlas item layer.
  */
 @Environment(EnvType.CLIENT)
-@Mixin(RenderLayer.class)
+@Mixin(RenderLayers.class)
 public class ItemTranslucencyMixin {
 
-    @Inject(method = "getItemEntityTranslucentCull", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "itemEntityTranslucentCull", at = @At("HEAD"), cancellable = true)
     private static void forceCutoutForItems(
             Identifier texture,
             CallbackInfoReturnable<RenderLayer> callbackInfo) {
 
         if (ForceRenderConfig.enabled && ForceRenderConfig.fixTranslucency) {
-            callbackInfo.setReturnValue(RenderLayer.getEntityCutoutNoCull(texture));
+            callbackInfo.setReturnValue(RenderLayers.entityCutout(texture));
         }
     }
 }
