@@ -74,7 +74,7 @@ Requirements: JDK 21
 
 ```bash
 # One-time: generate the Gradle wrapper binary
-gradle wrapper --gradle-version=8.8
+gradle wrapper --gradle-version=9.4.0
 
 # Build
 ./gradlew build
